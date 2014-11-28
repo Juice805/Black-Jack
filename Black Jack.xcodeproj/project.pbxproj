@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D003943B1A268907003470DC /* deck.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D00394391A268907003470DC /* deck.cpp */; };
+		D003943E1A26AB7B003470DC /* players.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D003943C1A26AB7B003470DC /* players.cpp */; };
 		D03D6E8C1A1E80B0008DB0B9 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D03D6E8B1A1E80B0008DB0B9 /* main.cpp */; };
+		D0CA2F241A27DF2600B47FE8 /* juice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0CA2F221A27DF2600B47FE8 /* juice.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,8 +26,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D00394391A268907003470DC /* deck.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = deck.cpp; sourceTree = "<group>"; };
+		D003943A1A268907003470DC /* deck.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = deck.h; sourceTree = "<group>"; };
+		D003943C1A26AB7B003470DC /* players.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = players.cpp; sourceTree = "<group>"; };
+		D003943D1A26AB7B003470DC /* players.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = players.h; sourceTree = "<group>"; };
+		D003943F1A26AF9F003470DC /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
 		D03D6E881A1E80B0008DB0B9 /* Black Jack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Black Jack"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D03D6E8B1A1E80B0008DB0B9 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		D0CA2F211A27DF2600B47FE8 /* juice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = juice.h; sourceTree = "<group>"; };
+		D0CA2F221A27DF2600B47FE8 /* juice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = juice.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,10 +67,26 @@
 		D03D6E8A1A1E80B0008DB0B9 /* Black Jack */ = {
 			isa = PBXGroup;
 			children = (
+				D0CA2F231A27DF2600B47FE8 /* Juice */,
+				D003943F1A26AF9F003470DC /* main.h */,
 				D03D6E8B1A1E80B0008DB0B9 /* main.cpp */,
+				D003943D1A26AB7B003470DC /* players.h */,
+				D003943C1A26AB7B003470DC /* players.cpp */,
+				D003943A1A268907003470DC /* deck.h */,
+				D00394391A268907003470DC /* deck.cpp */,
 			);
 			path = "Black Jack";
 			sourceTree = "<group>";
+		};
+		D0CA2F231A27DF2600B47FE8 /* Juice */ = {
+			isa = PBXGroup;
+			children = (
+				D0CA2F211A27DF2600B47FE8 /* juice.h */,
+				D0CA2F221A27DF2600B47FE8 /* juice.cpp */,
+			);
+			name = Juice;
+			path = "/Users/Justin/Cloud/Dropbox/School/SBCC/CS 140/Word Frequency Counter/../STL/STL";
+			sourceTree = "<absolute>";
 		};
 /* End PBXGroup section */
 
@@ -118,6 +144,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D003943E1A26AB7B003470DC /* players.cpp in Sources */,
+				D003943B1A268907003470DC /* deck.cpp in Sources */,
+				D0CA2F241A27DF2600B47FE8 /* juice.cpp in Sources */,
 				D03D6E8C1A1E80B0008DB0B9 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -232,6 +261,7 @@
 				D03D6E911A1E80B0008DB0B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
