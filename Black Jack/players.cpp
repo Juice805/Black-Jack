@@ -15,7 +15,11 @@
 // ---------- Hand Class ----------- //
 void Hand::newHand(){
     hand.clear();
+    splitHand.clear();
+    doubled = false;
     staying = false;
+    surrendered = false;
+    handSplit = false;
 }
 
 void Hand::deal(Deck* deck){
@@ -83,8 +87,14 @@ bool Hand::bust(){
     for (int i = 0; i < aces; i++) {
         if ((handValue + 11) > 21) {
             handValue += 1; //adds one if 11 goes over 21
-            otherVal = handValue;
+            if (aces > 1) {
+                otherVal = handValue -10;
+            } else
+                otherVal = handValue;
         } else {
+            if (i != aces - 1) {
+                handValue += 1;     //if there are more than one aces, the first ones only add one
+            }
             handValue += 11;
             otherVal = handValue - 10;
         }
@@ -95,16 +105,36 @@ bool Hand::bust(){
     } else return false;
 }
 
+bool Hand::canSplit(){
+    if ( hand.size() == 2 && hand[0].viewSymbol() == hand[1].viewSymbol()) {
+        return true;
+    } else return false;
+}
+
 void Hand::hit(Deck* deck){
     drawCard(deck);
+    staying = false;
 }
 
 void Hand::stay(){
     staying = true;
 }
 
-bool Hand::isStaying(){
-    return staying;
+void Hand::doubleHand(Deck* deck){
+    hit(deck);
+    stay();
+    doubled =true;
+}
+
+void Hand::surrender(){
+    surrendered = true;
+}
+
+void Hand::split(){
+    handSplit = true;
+    splitHand.push_back(hand[1]); //moves second card to splitHand
+    hand.pop_back(); //remove card from original hand
+    
 }
 
 

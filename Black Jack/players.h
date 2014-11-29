@@ -16,7 +16,7 @@ using namespace std;
 
 class GenericPlayer {
 public:
-    string playerName(){
+    string playerName() const {
         return name;
     }
 protected:
@@ -34,20 +34,36 @@ public:
     void deal(Deck* deck);
     void showHand();
     bool bust();
-    bool isStaying();
     void stay();
+    bool isStaying() {return staying;};
     void hit(Deck* deck);
+    void surrender();
+    bool isSurrendered(){return surrendered;}
+    void doubleHand(Deck* deck);
+    bool isDoubled(){ return doubled; }
+    bool canSplit();
+    void split();
+    bool isSplit(){return handSplit;}
     int addCards(){ return handValue; }
     void newHand();
     int alternateValue(){return otherVal;} //returns other possible value if an ace
+    void setBetAmount(int amount){
+        bet = amount;
+    }
+    int getBet() const {return bet;}
 protected:
-    vector<Card> hand;
+    vector<Card> hand, splitHand;
     int handValue = 0;
     int otherVal; // true if ace is in hand
-    bool staying = false;
+    int bet;
     
 private:
     void drawCard(Deck* game);
+    bool doubled = false;
+    bool staying = false;
+    bool surrendered = false;
+    bool handSplit = false;
+
 };
 
 
@@ -76,19 +92,15 @@ public:
         } else
             money -= bet;
     }
-    void setBetAmount(int amount){
-            bet = amount;
-    }
-    int getBet(){return bet;}
     
     void win(int amount){
         money += amount;
     }
     
-    int cash(){ return money;}
+    int cash() const{ return money;}
     
 private:
-    int bet;
+
     int money = 500;
 };
 

@@ -25,19 +25,21 @@ public:
     }
     
     bool play(int playerCount);
-    
     vector<User> player;
-    
     void welcome();
-    
-    bool receiveCommand(User* player, string command);
     void printResults();
-    
+    bool reservedName(string name);
     void settings();
+    void playerTurn(User* player, bool flop = false, bool firstHand = false);
+    void showHelp();
 private:
     Deck myDeck;
     Dealer house;
+    bool receiveCommand(User* player, string command);
     bool playing = true;
+    bool needHelp = false;
+    void printResultList(const vector<User> userList, string singleResult, string multipleResult);
+    string error = "";
 };
 
 #endif /* defined(__Black_Jack__game__) */
