@@ -83,22 +83,30 @@ bool Hand::bust(){
     }
     otherVal = handValue; //in case no aces
     
+    int acevalue = 0;
     //wait till other cards are counted to deal with aces
     for (int i = 0; i < aces; i++) {
-        if ((handValue + 11) > 21) {
-            handValue += 1; //adds one if 11 goes over 21
-            if (aces > 1) {
-                otherVal = handValue -10;
+        if ((handValue + acevalue + 11) > 21) {
+            acevalue += 1; //adds one if 11 goes over 21
+            if (aces > 1 && handValue < 10) { //if handvalue is greater than 10, multiple aces can only be 1 each, if 10 then its 21
+                otherVal = handValue + acevalue - 10;
             } else
-                otherVal = handValue;
+                otherVal = handValue + acevalue;
         } else {
             if (i != aces - 1) {
-                handValue += 1;     //if there are more than one aces, the first ones only add one
+                acevalue += 1;     //if there is more than one ace, the first ones only add one
+            } else {
+                acevalue += 11;
+                if (handValue + acevalue == 21) {
+                    otherVal = 21;
+                } else {
+                    otherVal = handValue + acevalue - 10;
+                }
             }
-            handValue += 11;
-            otherVal = handValue - 10;
         }
     }
+    
+    handValue+=acevalue;
     
     if (handValue > 21) {
         return true;
