@@ -26,7 +26,7 @@ protected:
 
 
 // HAND CLASS
-class Hand: public GenericPlayer{
+class Hand{
 public:
     Hand(){
     }
@@ -42,7 +42,6 @@ public:
     void doubleHand(Deck* deck);
     bool isDoubled(){ return doubled; }
     bool canSplit();
-    void split();
     bool isSplit(){return handSplit;}
     int addCards(){ return handValue; }
     void newHand();
@@ -52,10 +51,9 @@ public:
     }
     int getBet() const {return bet;}
 protected:
-    vector<Card> hand, splitHand;
+    vector<Card> hand;
     int handValue = 0;
     int otherVal; // true if ace is in hand
-    int bet;
     
 private:
     void drawCard(Deck* game);
@@ -63,12 +61,14 @@ private:
     bool staying = false;
     bool surrendered = false;
     bool handSplit = false;
+    int bet;
+    
+    friend class User;
 
 };
 
-
 // DEALER CLASS
-class Dealer: public Hand {
+class Dealer: public GenericPlayer {
 public:
     Dealer(){name="Dealer";}
     void showFlop();
@@ -76,7 +76,7 @@ public:
 
 
 // USER CLASS
-class User: public Hand {
+class User: public GenericPlayer {
 public:
     User(){    }
     User(string userName){
@@ -86,11 +86,11 @@ public:
         name = username;
     }
     void placeBet(){
-        if (bet > money) {
-            bet = money;
+        if (hand.bet > money) {
+            hand.bet = money;
             money = 0;
         } else
-            money -= bet;
+            money -= hand.bet;
     }
     
     void win(int amount){
@@ -98,10 +98,11 @@ public:
     }
     
     int cash() const{ return money;}
-    
+    void split();
 private:
-
+    Hand hand, splitHand;
     int money = 500;
+    bool didSplit;
 };
 
 
