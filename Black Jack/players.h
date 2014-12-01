@@ -93,6 +93,7 @@ public:
     void newHand(){
         hand.newHand();
         splitHand.newHand();
+        didSplit = false;
     }
     
     void win(int amount){

@@ -141,7 +141,6 @@ void User::split(){
     splitHand.bet = hand.bet;
     splitHand.cards.push_back(hand.cards[1]); //moves second card to splitHand
     hand.cards.pop_back(); //remove card from original hand
-    
 }
 
 
