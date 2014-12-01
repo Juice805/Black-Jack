@@ -35,7 +35,7 @@ public:
 private:
     Deck myDeck;
     Dealer house;
-    bool receiveCommand(User* player, string command);
+    bool receiveCommand(User* player, Hand* hand, string command);
     bool playing = true;
     bool needHelp = false;
     void printResultList(const vector<User> userList, string singleResult, string multipleResult);

@@ -14,12 +14,10 @@
 
 // ---------- Hand Class ----------- //
 void Hand::newHand(){
-    hand.clear();
-    splitHand.clear();
+    cards.clear();
     doubled = false;
     staying = false;
     surrendered = false;
-    handSplit = false;
 }
 
 void Hand::deal(Deck* deck){
@@ -34,40 +32,40 @@ void Hand::drawCard(Deck* game){
     while (!placedInHand) {
         cardNum =  int(rand()%(52*game->numOfDecks())); //generate new card number
         if (!game->alreadyDrawn(cardNum)) {     //if card is not already drawn
-            hand.push_back(game->grabCard(cardNum));        //add to hand
+            cards.push_back(game->grabCard(cardNum));        //add to hand
             placedInHand = true;
         } else placedInHand = false;        //else try again
     }
 }
 
 void Hand::showHand(){
-    for (int i = 0; i < hand.size(); i++) {
+    for (int i = 0; i < cards.size(); i++) {
         cout << "╔══════╗ ";
     } cout << "\n";
     
-    for (int i = 0; i < hand.size(); i++) {
-        if (hand[i].viewSymbol() == '0') {
-            cout << "║ " << hand[i].viewSuit() << "10" << "  ║ ";
+    for (int i = 0; i < cards.size(); i++) {
+        if (cards[i].viewSymbol() == '0') {
+            cout << "║ " << cards[i].viewSuit() << "10" << "  ║ ";
         } else
-            cout << "║ " << hand[i].viewSuit() << hand[i].viewSymbol() << "   ║ ";
+            cout << "║ " << cards[i].viewSuit() << cards[i].viewSymbol() << "   ║ ";
     } cout << "\n";
     
-    for (int i = 0; i < hand.size(); i++) {
+    for (int i = 0; i < cards.size(); i++) {
         cout << "║      ║ ";
     } cout << "\n";
     
-    for (int i = 0; i < hand.size(); i++) {
+    for (int i = 0; i < cards.size(); i++) {
         cout << "║      ║ ";
     } cout << "\n";
     
-    for (int i = 0; i < hand.size(); i++) {
-        if (hand[i].viewSymbol() == '0') {
-            cout << "║  " << hand[i].viewSuit() << "10" << " ║ ";
+    for (int i = 0; i < cards.size(); i++) {
+        if (cards[i].viewSymbol() == '0') {
+            cout << "║  " << cards[i].viewSuit() << "10" << " ║ ";
         } else
-            cout << "║   " << hand[i].viewSuit() << hand[i].viewSymbol() << " ║ ";
+            cout << "║   " << cards[i].viewSuit() << cards[i].viewSymbol() << " ║ ";
     } cout << "\n";
     
-    for (int i = 0; i < hand.size(); i++) {
+    for (int i = 0; i < cards.size(); i++) {
         cout << "╚══════╝ ";
     } cout << "\n";
 }
@@ -76,10 +74,10 @@ void Hand::showHand(){
 bool Hand::bust(){
     handValue = 0;
     int  aces = 0;
-    for (int i = 0; i < hand.size(); i++) {
-        if (hand[i].isAce()) {
+    for (int i = 0; i < cards.size(); i++) {
+        if (cards[i].isAce()) {
             aces++;
-        } else handValue += hand[i].getValue();
+        } else handValue += cards[i].getValue();
     }
     otherVal = handValue; //in case no aces
     
@@ -114,7 +112,7 @@ bool Hand::bust(){
 }
 
 bool Hand::canSplit(){
-    if ( hand.size() == 2 && hand[0].viewSymbol() == hand[1].viewSymbol()) {
+    if ( cards.size() == 2 && cards[0].viewSymbol() == cards[1].viewSymbol()) {
         return true;
     } else return false;
 }
@@ -138,10 +136,11 @@ void Hand::surrender(){
     surrendered = true;
 }
 
-void Hand::split(){
-    handSplit = true;
-    splitHand.push_back(hand[1]); //moves second card to splitHand
-    hand.pop_back(); //remove card from original hand
+void User::split(){
+    didSplit = true;
+    splitHand.bet = hand.bet;
+    splitHand.cards.push_back(hand.cards[1]); //moves second card to splitHand
+    hand.cards.pop_back(); //remove card from original hand
     
 }
 
@@ -150,38 +149,38 @@ void Hand::split(){
 
 void Dealer::showFlop(){
     cout << "╔══════╗ ";
-    for (int i = 1; i < hand.size(); i++) {
+    for (int i = 1; i < hand.cards.size(); i++) {
         cout << "╔══════╗ ";
     } cout << "\n";
     
     cout << "║ ?    ║ ";
-    for (int i = 1; i < hand.size(); i++) {
-        if (hand[i].viewSymbol() == '0') {
-            cout << "║ " << hand[i].viewSuit() << "10" << "  ║ ";
+    for (int i = 1; i < hand.cards.size(); i++) {
+        if (hand.cards[i].viewSymbol() == '0') {
+            cout << "║ " << hand.cards[i].viewSuit() << "10" << "  ║ ";
         } else
-            cout << "║ " << hand[i].viewSuit() << hand[i].viewSymbol() << "   ║ ";
+            cout << "║ " << hand.cards[i].viewSuit() << hand.cards[i].viewSymbol() << "   ║ ";
     } cout << "\n";
     
     cout << "║      ║ ";
-    for (int i = 1; i < hand.size(); i++) {
+    for (int i = 1; i < hand.cards.size(); i++) {
         cout << "║      ║ ";
     } cout << "\n";
     
     cout << "║      ║ ";
-    for (int i = 1; i < hand.size(); i++) {
+    for (int i = 1; i < hand.cards.size(); i++) {
         cout << "║      ║ ";
     } cout << "\n";
     
     cout << "║    ? ║ ";
-    for (int i = 1; i < hand.size(); i++) {
-        if (hand[i].viewSymbol() == '0') {
-            cout << "║  " << hand[i].viewSuit() << "10" << " ║ ";
+    for (int i = 1; i < hand.cards.size(); i++) {
+        if (hand.cards[i].viewSymbol() == '0') {
+            cout << "║  " << hand.cards[i].viewSuit() << "10" << " ║ ";
         } else
-            cout << "║   " << hand[i].viewSuit() << hand[i].viewSymbol() << " ║ ";
+            cout << "║   " << hand.cards[i].viewSuit() << hand.cards[i].viewSymbol() << " ║ ";
     } cout << "\n";
     
     cout << "╚══════╝ ";
-    for (int i = 1; i < hand.size(); i++) {
+    for (int i = 1; i < hand.cards.size(); i++) {
         cout << "╚══════╝ ";
     } cout << "\n";
 }

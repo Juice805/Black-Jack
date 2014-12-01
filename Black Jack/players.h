@@ -14,17 +14,6 @@
 #include "deck.h"
 using namespace std;
 
-class GenericPlayer {
-public:
-    string playerName() const {
-        return name;
-    }
-protected:
-    string name;
-};
-
-
-
 // HAND CLASS
 class Hand{
 public:
@@ -42,16 +31,13 @@ public:
     void doubleHand(Deck* deck);
     bool isDoubled(){ return doubled; }
     bool canSplit();
-    bool isSplit(){return handSplit;}
     int addCards(){ return handValue; }
     void newHand();
     int alternateValue(){return otherVal;} //returns other possible value if an ace
-    void setBetAmount(int amount){
-        bet = amount;
-    }
+
     int getBet() const {return bet;}
 protected:
-    vector<Card> hand;
+    vector<Card> cards;
     int handValue = 0;
     int otherVal; // true if ace is in hand
     
@@ -60,11 +46,23 @@ private:
     bool doubled = false;
     bool staying = false;
     bool surrendered = false;
-    bool handSplit = false;
     int bet;
     
     friend class User;
+    friend class Dealer;
+    
+    
+};
 
+class GenericPlayer {
+public:
+    string playerName() const {
+        return name;
+    }
+protected:
+    string name;
+    Hand hand;
+    friend class Game;
 };
 
 // DEALER CLASS
@@ -73,7 +71,6 @@ public:
     Dealer(){name="Dealer";}
     void showFlop();
 };
-
 
 // USER CLASS
 class User: public GenericPlayer {
@@ -93,16 +90,27 @@ public:
             money -= hand.bet;
     }
     
+    void newHand(){
+        hand.newHand();
+        splitHand.newHand();
+    }
+    
     void win(int amount){
         money += amount;
     }
     
     int cash() const{ return money;}
     void split();
+    void setBetAmount(int amount){
+        hand.bet = amount;
+    }
 private:
-    Hand hand, splitHand;
+    Hand splitHand;
     int money = 500;
-    bool didSplit;
+    bool didSplit= false;
+    
+    friend class Game;
+    
 };
 
 
