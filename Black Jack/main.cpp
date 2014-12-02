@@ -123,19 +123,18 @@ void Game::printResultList(const vector<User*> userList, string singleResult, st
 }
 
 void Game::printResults(){
-    vector<User*> winners, busted, losers, pushed, surrendered;
+    vector<User*> winners, doubled, busted, losers, pushed, surrendered;
     if (house.hand.bust()) {
         cout << house.playerName() << " Busted! ";
         for (int i = 0; i < player.size(); i++) { //count the number of winnners
             if (player[i].hand.isSurrendered()) {
                 player[i].win(int(player[i].hand.getBet()/2));
                 surrendered.push_back(&player[i]);
+            } else if (player[i].hand.isDoubled() && !player[i].hand.bust()) {
+                player[i].win(player[i].hand.getBet()*4);
+                doubled.push_back(&player[i]);
             } else if (!player[i].hand.bust()) {
-                if (player[i].hand.isDoubled()) { //doubles winning if doubled
-                    player[i].win(player[i].hand.getBet()*4);
-                } else {
-                    player[i].win(player[i].hand.getBet()*2);
-                }
+                player[i].win(player[i].hand.getBet()*2);
                 winners.push_back(&player[i]);
             } else busted.push_back(&player[i]);
             
@@ -155,6 +154,7 @@ void Game::printResults(){
             }
         }
         
+        printResultList(doubled, " wins double!\n", " win double!\n");
         printResultList(winners, " wins!\n", " win!\n");
         printResultList(busted, " busted!\n");
         printResultList(surrendered, " surrendered!\n");
@@ -172,15 +172,17 @@ void Game::printResults(){
             if (player[i].hand.isSurrendered()) {
                 player[i].win(int(player[i].hand.getBet()/2));
                 surrendered.push_back(&player[i]);
+            } else if (!player[i].hand.bust() && player[i].hand.isDoubled() && player[i].hand.addCards() > house.hand.addCards()) {
+                player[i].win(player[i].hand.getBet()*4);
+                doubled.push_back(&player[i]);
             } else if (!player[i].hand.bust() && player[i].hand.addCards() > house.hand.addCards()) {
-                if (player[i].hand.isDoubled()) {
-                    player[i].win(player[i].hand.getBet()*4);
-                } else {
-                    player[i].win(player[i].hand.getBet()*2);
-                }
+                player[i].win(player[i].hand.getBet()*2);
                 winners.push_back(&player[i]);
             } else if (!player[i].hand.bust() && player[i].hand.addCards() == house.hand.addCards()){
                 player[i].win(player[i].hand.getBet());
+                if (player[i].hand.isDoubled()) {
+                    player[i].win(player[i].hand.getBet());    //get its second bet back as well if doubled
+                }
                 pushed.push_back(&player[i]);
             } else if (!player[i].hand.bust() && player[i].hand.addCards() < house.hand.addCards()){
                 losers.push_back(&player[i]);
@@ -191,15 +193,17 @@ void Game::printResults(){
                 if (player[i].splitHand.isSurrendered()) {
                     player[i].win(int(player[i].splitHand.getBet()/2));
                     surrendered.push_back(&player[i]);
+                }  else if (!player[i].splitHand.bust() && player[i].splitHand.isDoubled() && player[i].splitHand.addCards() > house.hand.addCards()) {
+                    player[i].win(player[i].splitHand.getBet()*4);
+                    doubled.push_back(&player[i]);
                 } else if (!player[i].splitHand.bust() && player[i].splitHand.addCards() > house.hand.addCards()) {
-                    if (player[i].splitHand.isDoubled()) {
-                        player[i].win(player[i].splitHand.getBet()*4);
-                    } else {
-                        player[i].win(player[i].splitHand.getBet()*2);
-                    }
+                    player[i].win(player[i].hand.getBet()*2);
                     winners.push_back(&player[i]);
                 } else if (!player[i].splitHand.bust() && player[i].splitHand.addCards() == house.hand.addCards()){
                     player[i].win(player[i].splitHand.getBet());
+                    if (player[i].splitHand.isDoubled()) {
+                        player[i].win(player[i].splitHand.getBet());    //get its second bet back as well if doubled
+                    }
                     pushed.push_back(&player[i]);
                 } else if (!player[i].splitHand.bust() && player[i].splitHand.addCards() < house.hand.addCards()){
                     losers.push_back(&player[i]);
@@ -207,6 +211,7 @@ void Game::printResults(){
             }
         }
         
+        printResultList(doubled, " wins double!\n", " win double!\n");
         printResultList(winners, " wins!\n", " win!\n");
         printResultList(pushed, " pushes\n", " pushed\n");
         printResultList(losers, " loses!\n", " lost!\n");
@@ -389,19 +394,23 @@ void Game::settings(){
             continueGame = false;
         } else if (username == "cashout" || username == "remove" || username == "delete" || username == "d") {
             cin >> parameter;
-            if (player.size() > 1){
-                usernameMatch = false;
-                for (int i = 0; i < player.size(); i++) {
-                    if (stringtolower(parameter) == stringtolower(player[i].playerName())) {
-                        usernameMatch = true;
-                        user = i;
-                    }
+            usernameMatch = false;
+            for (int i = 0; i < player.size(); i++) {
+                if (stringtolower(parameter) == stringtolower(player[i].playerName())) {
+                    usernameMatch = true;
+                    user = i;
                 }
-                cout << endl << player[user].playerName()<< "($" << player[user].cash() << ") has cashed out!\n";
-                iter = player.begin();
-                iter += user;
-                player.erase(iter);
-            } else cout << "\nCannot delete last player\n";
+            }
+            if (usernameMatch) {
+                if (player.size() > 1){
+                    
+                    cout << endl << player[user].playerName()<< "($" << player[user].cash() << ") has cashed out!\n";
+                    iter = player.begin();
+                    iter += user;
+                    player.erase(iter);
+                } else cout << "\nCannot delete last player\n";
+            } else cout << "\nPlayer not found\n";
+            
         } else {
             usernameMatch = false;
             for (int i = 0; i < player.size(); i++) {
@@ -410,14 +419,18 @@ void Game::settings(){
                     user = i;
                 }
             }
-            
-            if (usernameMatch) {
+            while (cin.peek() == ' ') {
+                cin.ignore();
+            }
+            if (usernameMatch && cin.peek() != '\n') {
                 //read next parameter
                 cin >> parameter;
                 parameter = stringtolower(parameter);
                 
                 if (parameter == "bet") {
                     //read in last parameter for bet amount
+                    while (cin.peek() == ' ') {cin.ignore();}
+                    if (cin.peek() == '\n') {cout << "\nEnter bet amount:\n";}
                     cin >> number;
                     if (cin.fail()) {
                         cin.clear();
@@ -438,10 +451,15 @@ void Game::settings(){
                     player[user].setBetAmount(number);
                     cout << endl << player[user].playerName()<< "($" << player[user].cash() << ") is now betting $" << player[user].hand.getBet() << "\n";
 
+                } else {
+                    cout << "\nNot a valid command\n";
                 }
                 continueGame = false;
                 
-            } else{
+            } else if (usernameMatch) {
+                cout << "\nEnter a command\n";
+                continueGame = false;
+            } else {
                 cout << "\nNo matching user or command found\n";
                 continueGame = false;
             }
@@ -517,7 +535,7 @@ void Game::playerTurn(User* player, bool flop, bool firstHand){
     player->hand.showHand();
     cout << "\nValue: " << player->hand.addCards() << endl;
     
-    if (Game::player.size() != 1 || player->hand.bust()) {
+    if (Game::player.size() != 1 || player->hand.bust() || player->hand.isDoubled()) {
         cout << "\nPress Enter to proceed\n";
         cin.ignore(INT_MAX,'\n');
         cin.ignore(INT_MAX,'\n');
@@ -578,7 +596,7 @@ void Game::playerTurn(User* player, bool flop, bool firstHand){
         player->splitHand.showHand(); //we know the player split his hand
         cout << "\nValue: " << player->splitHand.addCards() << endl;
         
-        if (Game::player.size() != 1 || player->splitHand.bust()) {
+        if (Game::player.size() != 1 || player->splitHand.bust() || player->splitHand.isDoubled()) {
             cout << "\nPress Enter to proceed\n";
             cin.ignore(INT_MAX,'\n');
             cin.ignore(INT_MAX,'\n');
@@ -598,7 +616,10 @@ bool Game::play(int playerCount) {
     for (int i = 0; i < playerCount; i++) {
         unique = false;
         cout << "\n(Player " << i+1 << ") Enter unique name & bet: \n";
-        cin >> nameCatcher >> betCatcher;
+        cin >> nameCatcher;
+        while (cin.peek() == ' ') {cin.ignore();}
+        if (cin.peek() == '\n') {cout << "\nEnter bet amount:\n";}
+        cin >> betCatcher;
         
         while (!unique) {
             unique = true;
