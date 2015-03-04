@@ -81,8 +81,7 @@ bool Game::receiveCommand(User* player, Hand* hand, string command){
 
     if (command == "help") {//explain options
         needHelp = true;
-        return true;
-    }
+    } return true;
     
     return false;
 }
@@ -333,10 +332,10 @@ void Game::settings(){
             cout << "\n\t[P]lay\t\t\t\t\tStarts a round of Black Jack\n";
             cout << "\t[Q]uit\t\t\t\t\tEnds the game\n";
             cout << "\t[H]elp\t\t\t\t\tBrings up this dialog\n";
-            cout << "\t[A]dd [USER]\t\t\t\tAdd player to game\n";
-            cout << "\t[D]elete [USER]\t\t\t\tDelete a player from the game\n";
+            cout << "\t[A]dd [USER]\t\t\tAdd player to game\n";
+            cout << "\t[D]elete [USER]\t\t\tDelete a player from the game\n";
             cout << "\t[L]ist\t\t\t\t\tLists all players and their betting amounts\n";
-            cout << "\t[USER] bet [amount]\t\t\tChange the bet amount for a user\n";
+            cout << "\t[USER] bet [amount]\t\tChange the bet amount for a user\n";
             cout << "\t[Cred]its\t\t\t\tDisplays credits\n";
 
             
@@ -480,8 +479,6 @@ void Game::settings(){
                 continueGame = false;
             } else {
                 cout << "\nNo matching user or command found\n";
-                cin.clear();
-                cin.ignore(INT_MAX,'\n');
                 continueGame = false;
             }
             
@@ -533,9 +530,7 @@ void Game::playerTurn(User* player, bool flop, bool firstHand){
         cout << "\nWhat would you like to do? ([H]it, [S]tay, Help)\n";
         cin >> command;
         while (!receiveCommand(player, &player->hand,command)){
-            cout << "Invalid Command. Type \"help\" for more info\n";
-            cin.clear();
-            cin.ignore(INT_MAX,'\n');
+            cout << "Invalid Command\n";
             cin >> command;
         }
         cout << string(100, '\n');
@@ -599,9 +594,7 @@ void Game::playerTurn(User* player, bool flop, bool firstHand){
             cout << "\nWhat would you like to do? ([H]it, [S]tay, Help)\n";
             cin >> command;
             while (!receiveCommand(player, &player->splitHand,command)){
-                cout << "Invalid Command. Type \"help\" for more info\n";
-                cin.clear();
-                cin.ignore(INT_MAX,'\n');
+                cout << "Invalid Command\n";
                 cin >> command;
             }
             cout << string(100, '\n');
